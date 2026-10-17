@@ -446,7 +446,7 @@ class MainWindow(QMainWindow):
         self.Bericht_Anzeige.setAlignment(Qt.AlignmentFlag.AlignHCenter)
 
         self.Ausleih_ID_Anzeige = QLabel("Ausleih-ID")
-        self.Ausleih_ID_Anzeige = QLabel("Kunde")
+        self.Kunden_Anzeige = QLabel("Kunde")
         self.Mahnungen_Anzeige = QLabel("Mahnungen")
         self.Buch_Anzeige = QLabel("Buch")
         self.Rueckgabe_Datum_Anzeige = QLabel("Rückgabedatum")
@@ -455,9 +455,9 @@ class MainWindow(QMainWindow):
         self.Bericht_Tabelle = QGridLayout()
 
         self.Bericht_Tabelle.addWidget(self.Ausleih_ID_Anzeige, 0, 0)
-        self.Bericht_Tabelle.addWidget(self.Ausleih_ID_Anzeige, 0, 1)
-        self.Bericht_Tabelle.addWidget(self.Mahnungen_Anzeige, 0, 2)
-        self.Bericht_Tabelle.addWidget(self.Buch_Anzeige, 0, 3)
+        self.Bericht_Tabelle.addWidget(self.Buch_Anzeige, 0, 1)
+        self.Bericht_Tabelle.addWidget(self.Kunden_Anzeige, 0, 2)
+        self.Bericht_Tabelle.addWidget(self.Mahnungen_Anzeige, 0, 3)
         self.Bericht_Tabelle.addWidget(self.Rueckgabe_Datum_Anzeige, 0, 4)
         self.Bericht_Tabelle.addWidget(self.Ermahnen_Anzeige, 0, 5)
         

@@ -905,6 +905,24 @@ class MainWindow(QMainWindow):
         if y == 1: #Prüfung, ob es überhaupt überfällige Bücher gibt.
             QLabel, y, QMessageBox.information(self, "Info", "Es gibt keine überfälligen Bücher.")
 
+        for index in range(self.Bericht_Tabelle.count()):
+            item = self.Bericht_Tabelle.itemAt(index)
+            widget = item.widget()
+
+            # Überspringt Layout-Elemente; diese Funktion behandelt Widgets.
+            if widget is None:
+                continue
+
+            row, column, row_span, column_span = self.Bericht_Tabelle.getItemPosition(index)
+
+            if column == 5 and row != 0:
+                widget.setFont(QFont(MainWindow.Schriftart, MainWindow.Schriftgroesse))
+                widget.setStyleSheet("background-color: lightblue")
+                widget.setFixedWidth(140)
+                widget.clicked.connect(lambda checked=False, knopf=widget:self.mahnen(knopf))
+            else:
+                widget.setFont(QFont(self.Schriftart, self.Schriftgroesse))
+
     def einstellen(self):
         self.stacked.setCurrentWidget(self.Einstell_Container)
 

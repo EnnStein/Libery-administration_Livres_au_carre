@@ -5,6 +5,10 @@ from PyQt6.QtGui import *
 from PyQt6.QtSql import *
 from PyQt6.QtPrintSupport import *
 
+
+Zahlen = ["0","1","2","3","4","5","6","7","8","9"]
+
+
 def widget_at(grid_layout, target_row, target_column):
     for index in range(grid_layout.count()):
         item = grid_layout.itemAt(index)
@@ -379,7 +383,7 @@ class MainWindow(QMainWindow):
         Kunden_Modell.setTable("Kunden")
         Kunden_Modell.select()
         self.Kunden_Tabelle = QTableView()
-        #self.Kunden_Tabelle.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        #self.Kunden_Tabelle.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers) #deaktiviert Bearbeitung
         self.Kunden_Tabelle.setFont(QFont(self.Schriftart, self.Schriftgroesse))
         self.Kunden_Tabelle.setModel(Kunden_Modell)
         self.Kunden_Tabelle.resizeColumnsToContents()
@@ -856,8 +860,48 @@ class MainWindow(QMainWindow):
         eintrag += "'"+vorname+"'"+", "+"'"+nachname+"'"+", "+"'"+klasse+"'"+", "+"'"+anmerkungen+"'"+")"
         self.query.exec(eintrag)
 
+    def mahnen(self, knopf):
+        index = self.Bericht_Tabelle.indexOf(knopf)
+        if index != -1:
+            row, column, row_span, column_span = self.Bericht_Tabelle.getItemPosition(index)
+            a = widget_at(self.Bericht_Tabelle, row, 2)
+            kunden_name = a.text()
+            kundenid = []
+            kunden_id = ""
+            for zeichen in kunden_name:
+                if str(zeichen) in Zahlen:
+                    kundenid.append(str(zeichen))
+            for zeichen in kundenid:
+                kunden_id += zeichen
+            auslese = "SELECT Mahnungen FROM Kunden WHERE KundenID = "+kunden_id
+            #print(auslese)
+            self.query.exec(auslese)
+            self.query.next()
+            mahnungen = self.query.value(0)
+            mahnungen += 1
+            update = "UPDATE Kunden SET Mahnungen = "+str(mahnungen)+" WHERE KundenID = "+str(kunden_id)
+            print(update)
+            self.query.exec(update)
+            QMessageBox.information(self, "Mahnungen", "Mahnungen wurden ausgestellt.")
+            self.ablaufPruefen()
+
     def ablaufPruefen(self):
         self.stacked.setCurrentWidget(self.Faelligkeiten_Container)
+
+        #"säubert die Tabelle"
+        for index in reversed(range(self.Bericht_Tabelle.count())):
+            item = self.Bericht_Tabelle.itemAt(index)
+            widget = item.widget()
+
+            # Überspringt Layout-Elemente; diese Funktion behandelt Widgets.
+            if widget is None:
+                continue
+
+            row, column, row_span, column_span = self.Bericht_Tabelle.getItemPosition(index)
+
+            if row != 0:
+                self.Bericht_Tabelle.removeWidget(widget)
+                widget.deleteLater()
 
         Ausleih_ID = []
         Buch_ID = []
@@ -884,7 +928,7 @@ class MainWindow(QMainWindow):
                 self.query.next()
                 vorname = self.query.value(1)
                 nachname = self.query.value(2)
-                kunde = vorname + " " + nachname
+                kunde = vorname + " " + nachname + " (ID " + str(Kunden_ID[index]) + ")"
                 mahnungen = self.query.value(4)
 
                 auslese = "SELECT * FROM Katalog WHERE BuchID = " + str(Buch_ID[index])
@@ -935,7 +979,7 @@ class MainWindow(QMainWindow):
         elif self.Schriftgroesse_cb.currentText() == "mittel":
             self.Schriftgroesse = 14
         else:
-            self.Schriftgroesse = 15
+            self.Schriftgroesse = 16
 
     def schriftartAendern(self):
         self.Schriftart = self.Schriftart_cb.currentText()

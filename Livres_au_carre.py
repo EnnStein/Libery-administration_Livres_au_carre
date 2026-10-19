@@ -695,10 +695,10 @@ class MainWindow(QMainWindow):
             return
 
         suche = ""
-
-        suche = "SELECT * FROM Ausgeliehen WHERE BuchID = "+buchid
-
-        suche = "SELECT * FROM Ausgeliehen WHERE KundenID = "+kundenid
+        if buchid != "":
+            suche = "SELECT * FROM Ausgeliehen WHERE BuchID = "+buchid
+        elif kundenid != "":
+            suche = "SELECT * FROM Ausgeliehen WHERE KundenID = "+kundenid
         
         if suche != "": 
             self.query.exec(suche)

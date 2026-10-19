@@ -629,7 +629,26 @@ class MainWindow(QMainWindow):
 
     def ausleihen(self):
         buchid = self.Ausleih_Buch_Edit.text()
+        if buchid == "":
+            QMessageBox.warning(self, "Fehler!", "Kein Buch ausgewählt.")
+            return
+        auslese = "SELECT COUNT (*) FROM Katalog WHERE BuchID = "+buchid
+        self.query.exec(auslese)
+        self.query.next()
+        if self.query.value(0) == 0:
+            QMessageBox.warning(self, "Fehler!", "Es gibt kein Buch mit der ausgewählten ID.")
+            return
         kundenid = self.Ausleih_Kunde_Edit.text()
+        if kundenid == "":
+            QMessageBox.warning(self, "Fehler!", "Kein Kunde ausgewählt.")
+            return
+        auslese = "SELECT COUNT (*) FROM Kunden WHERE KundenID = "+kundenid
+        self.query.exec(auslese)
+        self.query.next()
+        if self.query.value(0) == 0:
+            QMessageBox.warning(self, "Fehler!", "Es gibt keinen Kunden mit der ausgewählten ID.")
+            return
+            
         ausleih_datum = QDate.currentDate()
         rueckgabe_datum = ausleih_datum.addMonths(1)
         ausleih_datum = ausleih_datum.toString("dd.MM.yyyy")

@@ -679,14 +679,26 @@ class MainWindow(QMainWindow):
 
 
         buchid = self.Abgabe_BuchID_Edit.text()
-        kundeid = self.Abgabe_KundenID_Edit.text()
+        auslese = "SELECT COUNT (*) FROM Katalog WHERE BuchID = "+buchid
+        self.query.exec(auslese)
+        self.query.next()
+        if self.query.value(0) == 0:
+            QMessageBox.warning(self, "Fehler!", "Es gibt kein Buch mit der ausgewählten ID.")
+            return
+
+        kundenid = self.Abgabe_KundenID_Edit.text()
+        auslese = "SELECT COUNT (*) FROM Kunden WHERE KundenID = "+kundenid
+        self.query.exec(auslese)
+        self.query.next()
+        if self.query.value(0) == 0:
+            QMessageBox.warning(self, "Fehler!", "Es gibt keinen Kunden mit der ausgewählten ID.")
+            return
+
         suche = ""
 
-        if buchid != "":
-            suche = "SELECT * FROM Ausgeliehen WHERE BuchID = "+buchid
+        suche = "SELECT * FROM Ausgeliehen WHERE BuchID = "+buchid
 
-        elif kundeid != "":
-            suche = "SELECT * FROM Ausgeliehen WHERE KundenID = "+kundeid
+        suche = "SELECT * FROM Ausgeliehen WHERE KundenID = "+kundenid
         
         if suche != "": 
             self.query.exec(suche)

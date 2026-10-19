@@ -582,6 +582,11 @@ class MainWindow(QMainWindow):
         Ansicht.addAction(self.Fenster_Act)
         Ansicht.addAction(self.Vollbild_Act)
 
+        Operatoren = self.menuBar().addMenu("Operatoren")
+        Operatoren.addAction(self.Ausleih_Act)
+        Operatoren.addAction(self.Rueckgabe_Act)
+        Operatoren.addAction(self.Ablauf_Pruefen_Act)
+
         Katalog = self.menuBar().addMenu("Katalog")
         Katalog.addAction(self.Ansehen_Act)
         Katalog.addAction(self.Suchen_Act)
